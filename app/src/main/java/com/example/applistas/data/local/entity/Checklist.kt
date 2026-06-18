@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey
 data class Checklist(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
-    val timestamp: Long = System.currentTimeMillis(),
-    val validity: Long,
     val isSynced: Boolean = false,
     val isCompleted: Boolean = false
 )

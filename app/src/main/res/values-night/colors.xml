@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="notes_background">#171015</color>
+    <color name="notes_surface">#4A3D49</color>
+    <color name="notes_surface_dark">#2A183E</color>
+    <color name="notes_primary">#8A5CF6</color>
+    <color name="notes_primary_soft">#5D3E9F</color>
+    <color name="notes_text">#F6EFF8</color>
+    <color name="notes_text_muted">#C8B7CE</color>
+    <color name="notes_text_disabled">#9F8DA6</color>
+    <color name="notes_stroke">#8A5CF6</color>
+</resources>

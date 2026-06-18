@@ -6,4 +6,59 @@
     </style>
 
     <style name="Theme.AppListas" parent="Base.Theme.AppListas" />
+
+    <style name="NoteFilterButton">
+        <item name="android:layout_width">82dp</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:background">@drawable/bg_filter_outline</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/notes_text</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="BottomNavButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_nav_outline</item>
+        <item name="android:padding">14dp</item>
+        <item name="tint">@color/notes_text</item>
+    </style>
+
+    <style name="SettingsRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">46dp</item>
+        <item name="android:background">@drawable/bg_text_input</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+    </style>
+
+    <style name="SettingsRowLabel">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/notes_text</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SettingsRowValue">
+        <item name="android:layout_width">96dp</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:background">@drawable/bg_filter_selected</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/notes_text</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

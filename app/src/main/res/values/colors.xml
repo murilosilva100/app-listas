@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="notes_background">#FAF7FD</color>
+    <color name="notes_surface">#E9E0F1</color>
+    <color name="notes_surface_dark">#F2ECF8</color>
+    <color name="notes_primary">#8057E8</color>
+    <color name="notes_primary_soft">#B69AF4</color>
+    <color name="notes_text">#241A2D</color>
+    <color name="notes_text_muted">#5E4E69</color>
+    <color name="notes_text_disabled">#7B6A85</color>
+    <color name="notes_stroke">#8A5CF6</color>
 </resources>

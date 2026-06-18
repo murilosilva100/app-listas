@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addEditNoteRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/notes_background"
+    tools:context=".AddEditNoteActivity">
+
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="0dp"
+        android:layout_height="72dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_note"
+            app:tint="@color/notes_primary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="App de notas"
+            android:textColor="@color/notes_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/headerDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#3A2553"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer" />
+
+    <ScrollView
+        android:id="@+id/formScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomArea"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerDivider">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="22dp">
+
+            <TextView
+                android:id="@+id/screenTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/notes_text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/formCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_note_card"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Adicionar titulo"
+                    android:textColor="@color/notes_text"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_text_input">
+
+                    <EditText
+                        android:id="@+id/noteTitleInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="Digite aqui..."
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapSentences"
+                        android:maxLines="1"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="48dp"
+                        android:textColor="@color/notes_text"
+                        android:textColorHint="@color/notes_text_disabled"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="12dp"
+                        android:contentDescription="Editar titulo"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@color/notes_text_muted" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Prioridade"
+                    android:textColor="@color/notes_text"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/priorityHigh"
+                        style="@style/NoteFilterButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Alta" />
+
+                    <TextView
+                        android:id="@+id/priorityMedium"
+                        style="@style/NoteFilterButton"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="Media" />
+
+                    <TextView
+                        android:id="@+id/priorityLow"
+                        style="@style/NoteFilterButton"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="Baixa" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Adicionar texto (opcional)"
+                    android:textColor="@color/notes_text"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_text_input">
+
+                    <EditText
+                        android:id="@+id/noteContentInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="Digite aqui..."
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLines="2"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="48dp"
+                        android:textColor="@color/notes_text"
+                        android:textColorHint="@color/notes_text_disabled"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="12dp"
+                        android:contentDescription="Editar texto"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@color/notes_text_muted" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Adicionar localizacao (opcional)"
+                    android:textColor="@color/notes_text"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/locationButton"
+                    android:layout_width="92dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_filter_selected"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/ic_login_arrow"
+                    android:drawablePadding="6dp"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:textColor="@color/notes_text"
+                    app:drawableTint="@color/notes_text" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/saveNoteButton"
+                android:layout_width="110dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="42dp"
+                android:background="@drawable/bg_filter_selected"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="Salvar"
+                android:textColor="@color/notes_text"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomArea"
+        android:layout_width="0dp"
+        android:layout_height="88dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/bottomNavigation"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_bottom_bar"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="6dp">
+
+            <ImageButton
+                android:id="@+id/navHome"
+                style="@style/BottomNavButton"
+                android:contentDescription="Tela inicial"
+                android:src="@drawable/ic_home" />
+
+            <ImageButton
+                android:id="@+id/navChecklist"
+                style="@style/BottomNavButton"
+                android:layout_marginStart="10dp"
+                android:contentDescription="Checklists"
+                android:src="@drawable/ic_checklist" />
+
+            <ImageButton
+                android:id="@+id/navSettings"
+                style="@style/BottomNavButton"
+                android:layout_marginStart="10dp"
+                android:contentDescription="Configuracoes"
+                android:src="@drawable/ic_settings" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/addNoteButton"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="18dp"
+            android:background="@drawable/bg_filter_selected"
+            android:contentDescription="Adicionar nota"
+            android:padding="17dp"
+            android:src="@drawable/ic_add"
+            app:tint="@color/notes_text" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

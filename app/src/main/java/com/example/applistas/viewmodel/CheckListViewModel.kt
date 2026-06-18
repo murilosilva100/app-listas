@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.applistas.data.local.entity.Checklist
+import com.example.applistas.data.local.entity.NotePriority
 import com.example.applistas.data.repository.ChecklistRepository
 import kotlinx.coroutines.launch
 
@@ -24,4 +25,27 @@ class CheckListViewModel(private val repository: ChecklistRepository) : ViewMode
     fun update(checklist: Checklist) = viewModelScope.launch {
         repository.update(checklist)
     }
+
+    fun toggleCompleted(checklist: Checklist) = viewModelScope.launch {
+        repository.update(checklist.copy(isCompleted = !checklist.isCompleted))
+    }
+
+    fun saveChecklist(title: String, priority: NotePriority, currentChecklist: Checklist?) =
+        viewModelScope.launch {
+            if (currentChecklist == null) {
+                repository.insert(
+                    Checklist(
+                        title = title,
+                        priority = priority
+                    )
+                )
+            } else {
+                repository.update(
+                    currentChecklist.copy(
+                        title = title,
+                        priority = priority
+                    )
+                )
+            }
+        }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.applistas.data.local.entity.Note
+import com.example.applistas.data.local.entity.NotePriority
 import com.example.applistas.data.repository.NoteRepository
 import kotlinx.coroutines.launch
 
@@ -39,5 +40,31 @@ class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
 
     fun delete(note: Note) = viewModelScope.launch {
         repository.delete(note)
+    }
+
+    fun saveNote(
+        title: String,
+        content: String,
+        priority: NotePriority,
+        currentNote: Note?
+    ) = viewModelScope.launch {
+        if (currentNote == null) {
+            repository.insert(
+                Note(
+                    title = title,
+                    content = content,
+                    priority = priority
+                )
+            )
+        } else {
+            repository.update(
+                currentNote.copy(
+                    title = title,
+                    content = content,
+                    priority = priority,
+                    isSynced = false
+                )
+            )
+        }
     }
 }

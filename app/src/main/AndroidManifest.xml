@@ -12,6 +12,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppListas">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AddEditNoteActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AddEditChecklistActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ChecklistActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -30,8 +30,7 @@ class ChecklistRepositoryTest {
         val checklists = listOf(
             Checklist(
                 id = 1,
-                title = "Test Checklist",
-                validity = System.currentTimeMillis() + 300000
+                title = "Test Checklist"
             )
         )
         every { checklistDao.getAllChecklists() } returns flowOf(checklists)
@@ -46,8 +45,7 @@ class ChecklistRepositoryTest {
     fun `insertChecklist should call dao insertChecklist and return id`() = runTest {
         val checklist = Checklist(
             id = 1,
-            title = "New Checklist",
-            validity = 123456L
+            title = "New Checklist"
         )
         coEvery { checklistDao.insertChecklist(checklist) } returns 1L
 
@@ -61,8 +59,7 @@ class ChecklistRepositoryTest {
     fun `deleteChecklist should call dao deleteChecklist`() = runTest {
         val checklist = Checklist(
             id = 1,
-            title = "Delete Me",
-            validity = 123456L
+            title = "Delete Me"
         )
         coEvery { checklistDao.deleteChecklist(checklist) } returns Unit
 

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChecklistDao {
-    @Query("SELECT * FROM checklists ORDER BY timestamp DESC")
+    @Query("SELECT * FROM checklists ORDER BY id DESC")
     fun getAllChecklists(): Flow<List<Checklist>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

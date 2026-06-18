@@ -9,7 +9,7 @@ import com.example.applistas.data.local.dao.NoteDao
 import com.example.applistas.data.local.entity.Checklist
 import com.example.applistas.data.local.entity.Note
 
-@Database(entities = [Note::class, Checklist::class], version = 1, exportSchema = false)
+@Database(entities = [Note::class, Checklist::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
@@ -25,7 +25,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration(true)
+                    .build()
                 INSTANCE = instance
                 instance
             }
