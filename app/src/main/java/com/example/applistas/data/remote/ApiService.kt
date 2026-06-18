@@ -4,13 +4,12 @@ import com.example.applistas.data.local.entity.Checklist
 import com.example.applistas.data.local.entity.Note
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {
     @POST("checklist/sync")
-    suspend fun syncChecklist(@Body checklist: List<Checklist>): Response<List<Note>>
+    suspend fun syncChecklist(@Body checklists: List<Checklist>): Response<Unit>
 
-    @POST("notes/sync")
+    @POST("note/sync")
     suspend fun syncNotes(@Body notes: List<Note>): Response<Unit>
 }

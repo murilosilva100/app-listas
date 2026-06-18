@@ -4,13 +4,14 @@ import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -107,6 +108,8 @@ class ChecklistActivity : AppCompatActivity() {
         val title = view.findViewById<TextView>(R.id.checklistTitle)
         val status = view.findViewById<TextView>(R.id.checklistStatus)
         val editButton = view.findViewById<ImageButton>(R.id.editChecklistButton)
+        val deleteButton = view.findViewById<ImageButton>(R.id.deleteChecklistButton)
+        val contentContainer = view.findViewById<View>(R.id.checklistContentContainer)
 
         checkBox.isChecked = checklist.isCompleted
         checkBox.isClickable = false
@@ -123,16 +126,116 @@ class ChecklistActivity : AppCompatActivity() {
         }
 
         view.alpha = if (checklist.isCompleted) 0.72f else 1f
-        view.setOnClickListener {
+        setupSwipeToDelete(view, contentContainer, deleteButton) {
             viewModel.toggleCompleted(checklist)
         }
 
         editButton.setOnClickListener {
             openEditChecklist(checklist.id)
         }
+        deleteButton.setOnClickListener {
+            showDeleteChecklistDialog(checklist, contentContainer, deleteButton)
+        }
 
         UiPreferences.applyFontSize(view)
         return view
+    }
+
+    private fun setupSwipeToDelete(
+        card: View,
+        contentView: View,
+        deleteButton: ImageButton,
+        onRegularClick: () -> Unit
+    ) {
+        var downX = 0f
+        var downY = 0f
+        var startTranslationX = 0f
+
+        card.setOnTouchListener { touchedView, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.x
+                    downY = event.y
+                    startTranslationX = contentView.translationX
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val deltaX = event.x - downX
+                    val deltaY = event.y - downY
+                    if (kotlin.math.abs(deltaX) > kotlin.math.abs(deltaY)) {
+                        val nextTranslation = (startTranslationX + deltaX)
+                            .coerceIn(-DELETE_REVEAL_DISTANCE, 0f)
+                        contentView.translationX = nextTranslation
+                        deleteButton.visibility = if (nextTranslation < -10f) View.VISIBLE else View.GONE
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    val deltaX = event.x - downX
+                    val deltaY = event.y - downY
+
+                    when {
+                        deltaX < -SWIPE_THRESHOLD && kotlin.math.abs(deltaX) > kotlin.math.abs(deltaY) -> {
+                            revealDeleteAction(contentView, deleteButton)
+                        }
+                        deltaX > SWIPE_THRESHOLD && kotlin.math.abs(deltaX) > kotlin.math.abs(deltaY) -> {
+                            hideDeleteAction(contentView, deleteButton)
+                        }
+                        kotlin.math.abs(deltaX) > TAP_SLOP -> {
+                            if (contentView.translationX <= -DELETE_REVEAL_DISTANCE / 2f) {
+                                revealDeleteAction(contentView, deleteButton)
+                            } else {
+                                hideDeleteAction(contentView, deleteButton)
+                            }
+                        }
+                        else -> {
+                            touchedView.performClick()
+                            onRegularClick()
+                        }
+                    }
+                    true
+                }
+                MotionEvent.ACTION_CANCEL -> true
+                else -> true
+            }
+        }
+    }
+
+    private fun revealDeleteAction(contentView: View, deleteButton: ImageButton) {
+        deleteButton.visibility = View.VISIBLE
+        contentView.animate()
+            .translationX(-DELETE_REVEAL_DISTANCE)
+            .setDuration(160L)
+            .start()
+    }
+
+    private fun hideDeleteAction(contentView: View, deleteButton: ImageButton) {
+        contentView.animate()
+            .translationX(0f)
+            .setDuration(160L)
+            .withEndAction {
+                deleteButton.visibility = View.GONE
+            }
+            .start()
+    }
+
+    private fun showDeleteChecklistDialog(
+        checklist: Checklist,
+        contentView: View,
+        deleteButton: ImageButton
+    ) {
+        AlertDialog.Builder(this)
+            .setMessage("Voc\u00ea deseja excluir esta checklist")
+            .setPositiveButton("Sim") { _, _ ->
+                viewModel.delete(checklist)
+            }
+            .setNegativeButton("N\u00e3o") { _, _ ->
+                hideDeleteAction(contentView, deleteButton)
+            }
+            .setOnCancelListener {
+                hideDeleteAction(contentView, deleteButton)
+            }
+            .show()
     }
 
     private fun openCreateChecklist() {
@@ -164,5 +267,11 @@ class ChecklistActivity : AppCompatActivity() {
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
+    }
+
+    companion object {
+        private const val SWIPE_THRESHOLD = 90f
+        private const val TAP_SLOP = 12f
+        private const val DELETE_REVEAL_DISTANCE = 72f
     }
 }

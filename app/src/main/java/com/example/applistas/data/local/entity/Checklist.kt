@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Checklist(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
+    val priority: NotePriority = NotePriority.MEDIUM,
     val isSynced: Boolean = false,
     val isCompleted: Boolean = false
 )

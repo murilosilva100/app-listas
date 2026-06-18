@@ -12,10 +12,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.applistas.data.local.AppDatabase
+import com.example.applistas.data.remote.RetrofitInstance
+import com.example.applistas.data.repository.SyncRepository
+import com.example.applistas.viewmodel.ApiSyncViewModel
+import com.example.applistas.viewmodel.SyncStatus
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var syncViewModel: ApiSyncViewModel
     private lateinit var themeValue: TextView
     private lateinit var fontSizeValue: TextView
+    private lateinit var syncValue: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UiPreferences.applySavedTheme(this)
@@ -29,15 +38,29 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
+        setupViewModel()
         setupViews()
         setupBottomMenu()
+        observeSyncStatus()
         refreshValues()
         UiPreferences.applyFontSize(findViewById(R.id.settingsRoot))
+    }
+
+    private fun setupViewModel() {
+        val database = AppDatabase.getDatabase(applicationContext)
+        val repository = SyncRepository(
+            noteDao = database.noteDao(),
+            checklistDao = database.checklistDao(),
+            apiService = RetrofitInstance.api
+        )
+        val factory = ApiSyncViewModelFactory(repository)
+        syncViewModel = ViewModelProvider(this, factory)[ApiSyncViewModel::class.java]
     }
 
     private fun setupViews() {
         themeValue = findViewById(R.id.themeValue)
         fontSizeValue = findViewById(R.id.fontSizeValue)
+        syncValue = findViewById(R.id.syncValue)
 
         findViewById<View>(R.id.themeRow).setOnClickListener {
             showThemeMenu()
@@ -53,9 +76,30 @@ class SettingsActivity : AppCompatActivity() {
             showFontSizeMenu()
         }
 
-        findViewById<View>(R.id.syncRow).setOnClickListener {
-            // TODO: executar sincronizacao com API REST quando o fluxo de nuvem for implementado.
-            Toast.makeText(this, "Sincronizacao em desenvolvimento", Toast.LENGTH_SHORT).show()
+        val syncClickListener = View.OnClickListener {
+            if (syncViewModel.sync()) {
+                syncValue.text = "Sincronizando..."
+                Toast.makeText(this, "sincroniza\u00e7\u00e3o em andamento", Toast.LENGTH_SHORT).show()
+            }
+        }
+        findViewById<View>(R.id.syncRow).setOnClickListener(syncClickListener)
+        syncValue.setOnClickListener(syncClickListener)
+    }
+
+    private fun observeSyncStatus() {
+        syncViewModel.syncStatus.observe(this) { status ->
+            when (status) {
+                SyncStatus.LOADING -> Unit
+                SyncStatus.SUCCESS -> {
+                    syncValue.text = ""
+                    Toast.makeText(this, "sincroniza\u00e7\u00e3o conclu\u00edda", Toast.LENGTH_SHORT).show()
+                }
+                SyncStatus.ERROR -> {
+                    syncValue.text = ""
+                    Toast.makeText(this, "erro ao sincronizar", Toast.LENGTH_SHORT).show()
+                }
+                SyncStatus.IDLE -> Unit
+            }
         }
     }
 
@@ -125,5 +169,17 @@ class SettingsActivity : AppCompatActivity() {
         private const val THEME_LIGHT_ID = 1
         private const val THEME_DARK_ID = 2
         private val FONT_SIZE_OPTIONS = listOf(8, 10, 12, 14, 16)
+    }
+
+    private class ApiSyncViewModelFactory(
+        private val repository: SyncRepository
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(ApiSyncViewModel::class.java)) {
+                return ApiSyncViewModel(repository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }

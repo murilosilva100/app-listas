@@ -9,7 +9,7 @@ import com.example.applistas.data.local.dao.NoteDao
 import com.example.applistas.data.local.entity.Checklist
 import com.example.applistas.data.local.entity.Note
 
-@Database(entities = [Note::class, Checklist::class], version = 2, exportSchema = false)
+@Database(entities = [Note::class, Checklist::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao

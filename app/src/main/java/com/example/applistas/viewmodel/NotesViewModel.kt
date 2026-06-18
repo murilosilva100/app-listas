@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.applistas.data.local.entity.Address
 import com.example.applistas.data.local.entity.Note
 import com.example.applistas.data.local.entity.NotePriority
 import com.example.applistas.data.repository.NoteRepository
@@ -46,6 +47,7 @@ class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
         title: String,
         content: String,
         priority: NotePriority,
+        address: Address?,
         currentNote: Note?
     ) = viewModelScope.launch {
         if (currentNote == null) {
@@ -53,7 +55,8 @@ class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
                 Note(
                     title = title,
                     content = content,
-                    priority = priority
+                    priority = priority,
+                    address = address
                 )
             )
         } else {
@@ -62,6 +65,7 @@ class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
                     title = title,
                     content = content,
                     priority = priority,
+                    address = address,
                     isSynced = false
                 )
             )
