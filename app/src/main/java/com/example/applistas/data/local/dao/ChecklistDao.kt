@@ -9,6 +9,9 @@ interface ChecklistDao {
     @Query("SELECT * FROM checklists ORDER BY id DESC")
     fun getAllChecklists(): Flow<List<Checklist>>
 
+    @Query("SELECT * FROM checklists WHERE isSynced = 0")
+    suspend fun getUnsyncedChecklists(): List<Checklist>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChecklist(checklist: Checklist): Long
 

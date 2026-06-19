@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,21 +14,39 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.applistas.data.local.AppDatabase
+import com.example.applistas.data.local.entity.Address
 import com.example.applistas.data.local.entity.Note
 import com.example.applistas.data.local.entity.NotePriority
 import com.example.applistas.data.repository.NoteRepository
 import com.example.applistas.viewmodel.NotesViewModel
+import java.util.Locale
 
 class AddEditNoteActivity : AppCompatActivity() {
     private lateinit var viewModel: NotesViewModel
     private lateinit var titleInput: EditText
     private lateinit var contentInput: EditText
+    private lateinit var selectedLocationText: TextView
     private lateinit var priorityButtons: Map<NotePriority, TextView>
 
     private var noteId: Int = NO_NOTE_ID
     private var currentNote: Note? = null
     private var selectedPriority: NotePriority = NotePriority.HIGH
+    private var selectedAddress: Address? = null
     private var hasLoadedNote = false
+
+    private val mapPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != RESULT_OK) return@registerForActivityResult
+
+        val data = result.data ?: return@registerForActivityResult
+        val latitude = data.getDoubleExtra(MapPickerActivity.EXTRA_SELECTED_LATITUDE, Double.NaN)
+        val longitude = data.getDoubleExtra(MapPickerActivity.EXTRA_SELECTED_LONGITUDE, Double.NaN)
+        if (latitude.isNaN() || longitude.isNaN()) return@registerForActivityResult
+
+        selectedAddress = Address(latitude, longitude)
+        updateSelectedLocationText()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UiPreferences.applySavedTheme(this)
@@ -62,13 +80,13 @@ class AddEditNoteActivity : AppCompatActivity() {
     private fun setupViews() {
         titleInput = findViewById(R.id.noteTitleInput)
         contentInput = findViewById(R.id.noteContentInput)
+        selectedLocationText = findViewById(R.id.selectedLocationText)
 
         findViewById<TextView>(R.id.screenTitle).text =
             if (isEditing()) "Editar nota" else "Adicionar nova nota"
 
         findViewById<View>(R.id.locationButton).setOnClickListener {
-            // TODO: abrir selecao de localizacao/mapa e salvar Address na nota.
-            Toast.makeText(this, "Localizacao sera integrada depois", Toast.LENGTH_SHORT).show()
+            openMapPicker()
         }
 
         findViewById<View>(R.id.saveNoteButton).setOnClickListener {
@@ -124,9 +142,20 @@ class AddEditNoteActivity : AppCompatActivity() {
             titleInput.setText(note.title)
             contentInput.setText(note.content)
             selectedPriority = note.priority
+            selectedAddress = note.address
             updateSelectedPriority()
+            updateSelectedLocationText()
             hasLoadedNote = true
         }
+    }
+
+    private fun openMapPicker() {
+        val intent = Intent(this, MapPickerActivity::class.java)
+        selectedAddress?.let { address ->
+            intent.putExtra(MapPickerActivity.EXTRA_INITIAL_LATITUDE, address.latitude)
+            intent.putExtra(MapPickerActivity.EXTRA_INITIAL_LONGITUDE, address.longitude)
+        }
+        mapPickerLauncher.launch(intent)
     }
 
     private fun saveNote() {
@@ -142,6 +171,7 @@ class AddEditNoteActivity : AppCompatActivity() {
             title = title,
             content = content,
             priority = selectedPriority,
+            address = selectedAddress,
             currentNote = currentNote
         )
         finish()
@@ -153,8 +183,10 @@ class AddEditNoteActivity : AppCompatActivity() {
         currentNote = null
         noteId = NO_NOTE_ID
         selectedPriority = NotePriority.HIGH
+        selectedAddress = null
         findViewById<TextView>(R.id.screenTitle).text = "Adicionar nova nota"
         updateSelectedPriority()
+        updateSelectedLocationText()
     }
 
     private fun updateSelectedPriority() {
@@ -166,6 +198,22 @@ class AddEditNoteActivity : AppCompatActivity() {
             }
             button.setBackgroundResource(background)
         }
+    }
+
+    private fun updateSelectedLocationText() {
+        val address = selectedAddress
+        if (address == null) {
+            selectedLocationText.visibility = View.GONE
+            selectedLocationText.text = ""
+            return
+        }
+
+        selectedLocationText.visibility = View.VISIBLE
+        selectedLocationText.text = "localiza\u00e7\u00e3o: %.6f, %.6f".format(
+            Locale.US,
+            address.latitude,
+            address.longitude
+        )
     }
 
     private fun isEditing(): Boolean = noteId != NO_NOTE_ID

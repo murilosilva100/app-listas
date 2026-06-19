@@ -162,6 +162,17 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/selectedLocationText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/notes_text_muted"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:text="localizacao: -23.550520, -46.633308"
+                    tools:visibility="visible" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -218,8 +229,8 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_filter_selected"
                     android:clickable="true"
-                    android:drawableEnd="@drawable/ic_login_arrow"
-                    android:drawablePadding="6dp"
+                    android:drawableTop="@drawable/ic_login_arrow"
+                    android:drawablePadding="0dp"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
